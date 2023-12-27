@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { BsArrowLeftShort, BsPerson, BsSearch, BsChevronDown, BsFillImageFill, BsReverseLayoutTextSidebarReverse } from "react-icons/bs";
 import { AiFillEnvironment, AiOutlineFileText, AiOutlineBarChart, AiOutlineMail, AiOutlineSetting, AiOutlineLogout } from "react-icons/ai";
 import { FaBars, FaHome, FaLock, FaMoneyBill, FaUser } from "react-icons/fa";
@@ -7,8 +7,17 @@ import { MdMessage } from "react-icons/md";
 import { NavLink } from "react-router-dom";
 
 const Sidebar = ({ children }) => {
+
     const [isOpen, setIsOpen] = useState(true);
     const [submenuOpen, setSubmenuOpen] = useState(false);
+
+    const inputRef = useRef(null);
+
+    useEffect(() => {
+        if (isOpen) {
+            inputRef.current.focus();
+        }
+    }, [isOpen]);
 
     const Menus = [
         { title: "Dashboard", path: "/" },
@@ -48,7 +57,7 @@ const Sidebar = ({ children }) => {
 
                 <div className={`flex items-center rounded-md bg-light-white mt-6 ${!isOpen ? "px-2.5" : "px-4"} py-2`}>
                     <BsSearch className={`text-white text-lg block float-left cursor-pointer ${isOpen && "mr-2"}`} />
-                    <input type={"search"} placeholder="Search"
+                    <input type={"search"} placeholder="Search" ref={inputRef}
                         className={`text-base bg-transparent w-full text-white focus:outline-none ${!isOpen && "hidden"}`} />
                 </div>
 
@@ -58,8 +67,8 @@ const Sidebar = ({ children }) => {
                             return (
                                 <>
                                     <NavLink key={menu.title} to={menu.path} className={`text-gray-300 text-sm 
-                  flex items-center gap-x-4 cursor-pointer p-2 
-                  hover:bg-light-white rounded-md ${menu.spacing ? "mt-9" : "mt-2"}`}>
+                                    flex items-center gap-x-4 cursor-pointer p-2 
+                                  hover:bg-light-white hover:border-r-solid hover:border-r-4 hover:border-r-[#fff] hover:ease-in-expo duration-200 ${menu.spacing ? "mt-9" : "mt-2"}`}>
                                         <span className="text-2xl block float-left">
                                             {
                                                 menu.icon ? menu.icon : <RiDashboardFill />
