@@ -5,6 +5,7 @@ import { FaBars, FaHome, FaLock, FaMoneyBill, FaUser } from "react-icons/fa";
 import { RiDashboardFill } from "react-icons/ri";
 import { MdMessage } from "react-icons/md";
 import { NavLink, Link, useLocation } from "react-router-dom";
+import { useMediaQuery } from "react-responsive";
 
 const Sidebar = ({ children }) => {
 
@@ -15,6 +16,8 @@ const Sidebar = ({ children }) => {
 
     const [activeMenu, setActiveMenu] = useState(""); // Track active menu
     const location = useLocation(); // React Router's useLocation hook
+
+    let isTablet = useMediaQuery({ query: "(max-width: 768px)" });
 
     useEffect(() => {
         if (isOpen) {
@@ -27,6 +30,21 @@ const Sidebar = ({ children }) => {
         const currentPath = location.pathname;
         setActiveMenu(currentPath);
     }, [location.pathname]);
+
+    useEffect(() => {
+        if (isTablet) {
+            //mobile 
+            setIsOpen(false);
+        } else {
+            //Laptop
+            setIsOpen(true);
+        }
+    }, [isTablet]);
+
+    //pathname change -> close sidebar (only mobile view)
+    useEffect(() => {
+        isTablet && setIsOpen(false);
+    }, [location.pathname])
 
     const Menus = [
         { title: "dashboard", path: "/" },
@@ -52,7 +70,12 @@ const Sidebar = ({ children }) => {
 
     return (
         <div className="flex">
-            <div className={`bg-dark-purple h-screen p-5 pt-8 ${isOpen ? "w-72" : "w-20"} duration-300 relative`}>
+            <div
+                onClick={() => setIsOpen(false)}
+                className={`md:hidden fixed inset-0 max-h-screen z-[998] bg-black/50 
+                ${isOpen ? "block" : "hidden"}`}>
+            </div>
+            <div className={`bg-dark-purple h-screen p-5 pt-8 ${isOpen ? "w-72" : "w-20"} duration-300 md:relative fixed z-[999]`}>
 
                 <BsArrowLeftShort
                     className={`bg-white text-dark-purple text-3xl 
@@ -99,7 +122,7 @@ const Sidebar = ({ children }) => {
                                                     return (
                                                         <Link key={submenuItem.title} to={submenuItem.path}
                                                             className={`text-gray-300 text-sm flex items-center gap-x-4 cursor-pointer p-2 px-5
-                                                      hover:bg-light-white rounded-md ${activeMenu === submenuItem.path ? "active" : ""}`}>
+                                                          hover:bg-light-white rounded-md ${activeMenu === submenuItem.path ? "active" : ""}`}>
                                                             {submenuItem.title}
                                                         </Link>
                                                     )
@@ -113,10 +136,9 @@ const Sidebar = ({ children }) => {
                     }
                 </ul>
             </div>
-            <div className="p-7">
-                {/* <h1 className="text-2xl font-semibold">Home Page</h1> */}
-                <main>{children}</main>
-            </div>
+            <main className="max-w-5xl flex-1 mx-auto py-4">
+                {children}
+            </main>
         </div>
     );
 }
