@@ -93,13 +93,12 @@ const Sidebar = ({ children }) => {
                         className={`text-base bg-transparent w-full text-white focus:outline-none ${!isOpen && "hidden"}`} />
                 </div>
 
-                <ul className="pt-2">
+                <ul className="pt-2 scrollbar-thin scrollbar-thumb-blue-700 scrollbar-track-dark-purple h-[82%] overflow-y-scroll">
                     {
                         Menus.map((menu, index) => {
                             return (
                                 <>
-                                    <Link key={menu.title} to={menu.path} className={`text-gray-300 text-sm 
-                                    flex items-center gap-x-4 cursor-pointer p-2 capitalize
+                                    <Link key={menu.title} to={menu.path} className={`text-gray-300 text-sm flex items-center gap-x-4 cursor-pointer p-2 capitalize
                                   hover:bg-light-white hover:border-r-solid hover:border-r-4 hover:border-r-[#fff] hover:ease-in-expo duration-200 
                                     ${menu.spacing ? "mt-9" : "mt-2"}
                                     ${activeMenu === menu.path || activeMenu.includes(menu.title) ? "active" : ""}`}>
