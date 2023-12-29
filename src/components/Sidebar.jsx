@@ -4,7 +4,7 @@ import { AiFillEnvironment, AiOutlineFileText, AiOutlineBarChart, AiOutlineMail,
 import { FaBars, FaHome, FaLock, FaMoneyBill, FaUser } from "react-icons/fa";
 import { RiDashboardFill } from "react-icons/ri";
 import { MdMessage } from "react-icons/md";
-import { NavLink } from "react-router-dom";
+import { NavLink, Link, useLocation } from "react-router-dom";
 
 const Sidebar = ({ children }) => {
 
@@ -13,32 +13,41 @@ const Sidebar = ({ children }) => {
 
     const inputRef = useRef(null);
 
+    const [activeMenu, setActiveMenu] = useState(""); // Track active menu
+    const location = useLocation(); // React Router's useLocation hook
+
     useEffect(() => {
         if (isOpen) {
             inputRef.current.focus();
         }
     }, [isOpen]);
 
+    useEffect(() => {
+        // Update active menu based on the current route
+        const currentPath = location.pathname;
+        setActiveMenu(currentPath);
+    }, [location.pathname]);
+
     const Menus = [
-        { title: "Dashboard", path: "/" },
-        { title: "Users", icon: <FaUser />, path: "/users" },
-        { title: "Messages", icon: <MdMessage />, path: "/messages" },
-        { title: "Media", spacing: true, icon: <BsFillImageFill />, path: "/media" },
+        { title: "dashboard", path: "/" },
+        { title: "users", icon: <FaUser />, path: "/users" },
+        { title: "messages", icon: <MdMessage />, path: "/messages" },
+        { title: "media", spacing: true, icon: <BsFillImageFill />, path: "/media" },
         {
-            title: "Projects",
+            title: "projects",
             icon: <BsReverseLayoutTextSidebarReverse />,
             submenu: true,
             submenuItems: [
-                { title: "Submenu 1", path: "/projects/submenu1" },
-                { title: "Submenu 2", path: "/projects/submenu2" },
-                { title: "Submenu 3", path: "/projects/submenu3" }
+                { title: "submenu1", path: "/projects/submenu1" },
+                { title: "submenu2", path: "/projects/submenu2" },
+                { title: "submenu3", path: "/projects/submenu3" }
             ]
         },
-        { title: "Analytics", icon: <AiOutlineBarChart />, path: "/analytics" },
-        { title: "Inbox", icon: <AiOutlineMail />, path: "/inbox" },
-        { title: "Profile", spacing: true, icon: <BsPerson />, path: "/profile" },
-        { title: "Settings", icon: <AiOutlineSetting />, path: "/settings" },
-        { title: "Logout", icon: <AiOutlineLogout />, path: "/logout" }
+        { title: "analytics", icon: <AiOutlineBarChart />, path: "/analytics" },
+        { title: "inbox", icon: <AiOutlineMail />, path: "/inbox" },
+        { title: "profile", spacing: true, icon: <BsPerson />, path: "/profile" },
+        { title: "settings", icon: <AiOutlineSetting />, path: "/settings" },
+        { title: "logout", icon: <AiOutlineLogout />, path: "/logout" }
     ]
 
     return (
@@ -66,9 +75,11 @@ const Sidebar = ({ children }) => {
                         Menus.map((menu, index) => {
                             return (
                                 <>
-                                    <NavLink key={menu.title} to={menu.path} className={`text-gray-300 text-sm 
-                                    flex items-center gap-x-4 cursor-pointer p-2 
-                                  hover:bg-light-white hover:border-r-solid hover:border-r-4 hover:border-r-[#fff] hover:ease-in-expo duration-200 ${menu.spacing ? "mt-9" : "mt-2"}`}>
+                                    <Link key={menu.title} to={menu.path} className={`text-gray-300 text-sm 
+                                    flex items-center gap-x-4 cursor-pointer p-2 capitalize
+                                  hover:bg-light-white hover:border-r-solid hover:border-r-4 hover:border-r-[#fff] hover:ease-in-expo duration-200 
+                                    ${menu.spacing ? "mt-9" : "mt-2"}
+                                    ${activeMenu === menu.path || activeMenu.includes(menu.title) ? "active" : ""}`}>
                                         <span className="text-2xl block float-left">
                                             {
                                                 menu.icon ? menu.icon : <RiDashboardFill />
@@ -80,17 +91,17 @@ const Sidebar = ({ children }) => {
                                                 <BsChevronDown className={`${submenuOpen && "rotate-180"}`} onClick={() => setSubmenuOpen(!submenuOpen)} />
                                             )
                                         }
-                                    </NavLink>
+                                    </Link>
                                     {
                                         menu.submenu && submenuOpen && isOpen && (
                                             <ul>
                                                 {menu.submenuItems.map((submenuItem, index) => {
                                                     return (
-                                                        <NavLink key={submenuItem.title} to={submenuItem.path} className="text-gray-300 text-sm 
-                                                        flex items-center gap-x-4 cursor-pointer p-2 px-5
-                                                      hover:bg-light-white rounded-md">
+                                                        <Link key={submenuItem.title} to={submenuItem.path}
+                                                            className={`text-gray-300 text-sm flex items-center gap-x-4 cursor-pointer p-2 px-5
+                                                      hover:bg-light-white rounded-md ${activeMenu === submenuItem.path ? "active" : ""}`}>
                                                             {submenuItem.title}
-                                                        </NavLink>
+                                                        </Link>
                                                     )
                                                 })}
                                             </ul>
