@@ -29,9 +29,9 @@ const Sidebar = ({ children }) => {
             icon: <BsReverseLayoutTextSidebarReverse />,
             submenu: true,
             submenuItems: [
-                { title: "Submenu 1" },
-                { title: "Submenu 2" },
-                { title: "Submenu 3" }
+                { title: "Submenu 1", path: "/projects/submenu1" },
+                { title: "Submenu 2", path: "/projects/submenu2" },
+                { title: "Submenu 3", path: "/projects/submenu3" }
             ]
         },
         { title: "Analytics", icon: <AiOutlineBarChart />, path: "/analytics" },
@@ -86,11 +86,11 @@ const Sidebar = ({ children }) => {
                                             <ul>
                                                 {menu.submenuItems.map((submenuItem, index) => {
                                                     return (
-                                                        <li key={index} className="text-gray-300 text-sm 
+                                                        <NavLink key={submenuItem.title} to={submenuItem.path} className="text-gray-300 text-sm 
                                                         flex items-center gap-x-4 cursor-pointer p-2 px-5
                                                       hover:bg-light-white rounded-md">
                                                             {submenuItem.title}
-                                                        </li>
+                                                        </NavLink>
                                                     )
                                                 })}
                                             </ul>
