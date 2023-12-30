@@ -6,6 +6,10 @@ import { RiDashboardFill } from "react-icons/ri";
 import { MdMessage } from "react-icons/md";
 import { NavLink, Link, useLocation } from "react-router-dom";
 import { useMediaQuery } from "react-responsive";
+import { MdMenu } from "react-icons/md";
+
+// other packages
+import { motion } from "framer-motion";
 
 const Sidebar = ({ children }) => {
 
@@ -46,6 +50,40 @@ const Sidebar = ({ children }) => {
         isTablet && setIsOpen(false);
     }, [location.pathname])
 
+    const Sidebar_animation = isTablet
+        ? //mobile view
+        {
+            open: {
+                x: 0,
+                width: "18rem",
+                transition: {
+                    damping: 40,
+                }
+            },
+            closed: {
+                x: -250,
+                width: 0,
+                transition: {
+                    damping: 40,
+                    delay: 0.5
+                }
+            }
+        } : {
+            //System view
+            open: {
+                width: "18rem",
+                transition: {
+                    damping: 40,
+                }
+            },
+            closed: {
+                width: "5rem",
+                transition: {
+                    damping: 40,
+                }
+            }
+        };
+
     const Menus = [
         { title: "dashboard", path: "/" },
         { title: "users", icon: <FaUser />, path: "/users" },
@@ -75,7 +113,11 @@ const Sidebar = ({ children }) => {
                 className={`md:hidden fixed inset-0 max-h-screen z-[998] bg-black/50 
                 ${isOpen ? "block" : "hidden"}`}>
             </div>
-            <div className={`bg-dark-purple h-screen p-5 pt-8 ${isOpen ? "w-72" : "w-20"} duration-300 md:relative fixed z-[999]`}>
+            <motion.div
+                variants={Sidebar_animation}
+                initial={{ x: isTablet ? -250 : 0 }}
+                animate={isOpen ? "open" : "closed"}
+                className={`bg-dark-purple h-screen p-5 pt-8 duration-300 md:relative fixed z-[999] w-[18rem]`}>
 
                 <BsArrowLeftShort
                     className={`bg-white text-dark-purple text-3xl 
@@ -93,7 +135,7 @@ const Sidebar = ({ children }) => {
                         className={`text-base bg-transparent w-full text-white focus:outline-none ${!isOpen && "hidden"}`} />
                 </div>
 
-                <ul className="pt-2 scrollbar-thin scrollbar-thumb-blue-700 scrollbar-track-dark-purple h-[82%] overflow-y-scroll">
+                <ul className={`pt-2  ${isOpen ? "scrollbar-track-dark-purple scrollbar-thin scrollbar-thumb-blue-700 h-[82%] overflow-y-scroll" : null} `}>
                     {
                         Menus.map((menu, index) => {
                             return (
@@ -134,6 +176,9 @@ const Sidebar = ({ children }) => {
                         })
                     }
                 </ul>
+            </motion.div>
+            <div className="m-3 md:hidden" onClick={() => setIsOpen(true)}>
+                <MdMenu size={25} />
             </div>
             <main className="max-w-5xl flex-1 mx-auto py-4">
                 {children}
