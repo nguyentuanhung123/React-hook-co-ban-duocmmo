@@ -36,11 +36,12 @@ const Sidebar = ({ children }) => {
     }, [location.pathname]);
 
     useEffect(() => {
+        //console.log(isTablet);
         if (isTablet) {
             //mobile 
             setIsOpen(false);
         } else {
-            //Laptop
+            // tablet or larger
             setIsOpen(true);
         }
     }, [isTablet]);
@@ -90,6 +91,16 @@ const Sidebar = ({ children }) => {
         { title: "messages", icon: <MdMessage />, path: "/messages" },
         { title: "media", spacing: true, icon: <BsFillImageFill />, path: "/media" },
         {
+            title: "lessons",
+            icon: <BsReverseLayoutTextSidebarReverse />,
+            submenu: true,
+            submenuItems: [
+                { title: "Bai106 Batching", path: "/lessons/bai106Batching" },
+                { title: "Bai107 Rerender", path: "/lessons/bai107Rerender" },
+                { title: "Bai108 CustomHook", path: "/lessons/bai108CustomHook" }
+            ]
+        },
+        {
             title: "projects",
             icon: <BsReverseLayoutTextSidebarReverse />,
             submenu: true,
@@ -110,15 +121,15 @@ const Sidebar = ({ children }) => {
         <div className="flex">
             <div
                 onClick={() => setIsOpen(false)}
-                className={`md:hidden fixed inset-0 max-h-screen z-[998] bg-black/50 
-                ${isOpen ? "block" : "hidden"}`}>
+                className={`fixed inset-0 max-h-screen z-[998] bg-black/50 
+                ${isOpen ? "block" : "hidden"}
+                ${isTablet ? null : "hidden"}`}>
             </div>
             <motion.div
                 variants={Sidebar_animation}
                 initial={{ x: isTablet ? -250 : 0 }}
                 animate={isOpen ? "open" : "closed"}
-                className={`bg-dark-purple h-screen p-5 pt-8 duration-300 md:relative fixed z-[999] w-[18rem]`}>
-
+                className={`bg-dark-purple h-screen p-5 pt-8 duration-300 ${isTablet ? "fixed" : "relative"} z-[999] w-[18rem]`}>
                 <BsArrowLeftShort
                     className={`bg-white text-dark-purple text-3xl 
             rounded-full absolute -right-3 top-9 border 
@@ -139,7 +150,7 @@ const Sidebar = ({ children }) => {
                     {
                         Menus.map((menu, index) => {
                             return (
-                                <>
+                                <div key={menu.title}>
                                     <Link key={menu.title} to={menu.path} className={`text-gray-300 text-sm flex items-center gap-x-4 cursor-pointer p-2 capitalize
                                   hover:bg-light-white hover:border-r-solid hover:border-r-4 hover:border-r-[#fff] hover:ease-in-expo duration-200 
                                     ${menu.spacing ? "mt-9" : "mt-2"}
@@ -171,13 +182,13 @@ const Sidebar = ({ children }) => {
                                             </ul>
                                         )
                                     }
-                                </>
+                                </div>
                             )
                         })
                     }
                 </ul>
             </motion.div>
-            <div className="m-3 md:hidden" onClick={() => setIsOpen(true)}>
+            <div className={`m-3 ${isTablet ? "inline-block" : "hidden"} `} onClick={() => setIsOpen(true)}>
                 <MdMenu size={25} />
             </div>
             <main className="max-w-5xl flex-1 mx-auto py-4">

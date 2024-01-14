@@ -10,6 +10,8 @@ import Inbox from './pages/Inbox';
 import Media from './pages/Media';
 import Messages from './pages/Messages'
 import Logout from './pages/Logout';
+import RuleOfHook from './pages/bai107Rerender/RuleOfHook';
+import Total from './pages/bai108CustomHook/Total';
 
 
 function App() {
@@ -27,6 +29,8 @@ function App() {
             <Route path='/media' element={<Media />}></Route>
             <Route path='/messages' element={<Messages />}></Route>
             <Route path='/logout' element={<Logout />}></Route>
+            <Route path='/lessons/bai107Rerender' element={<RuleOfHook />}></Route>
+            <Route path='/lessons/bai108CustomHook' element={<Total />}></Route>
           </Routes>
         </Sidebar>
       </Router>
